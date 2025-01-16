@@ -2,9 +2,9 @@ import axios from "axios";
 import store from "../redux/store";
 import { userLogout } from "../redux/userSlice";
 
-// const protocol = window.location.protocol === "https:" ? "https" : "http";
+const protocol = window.location.protocol === "https:" ? "https" : "http";
 export const dn = import.meta.env.VITE_BASE_URL || "localhost:8000";
-export const baseurl = `{dn}`;
+export const baseurl = `${protocol}://${dn}`;
 
 const apiClient = axios.create({
   baseURL: baseurl,
