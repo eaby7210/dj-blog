@@ -19,6 +19,7 @@ django-autoslug = "*"
 setuptools = "*"
 django-environ = "*"
 whitenoise = "*"
+gunicorn = "*"
 
 [dev-packages]
 
