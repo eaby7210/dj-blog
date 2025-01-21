@@ -22,6 +22,8 @@ const userSlice = createSlice({
       return { ...initialUser, initial: false };
     },
     userLogout() {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
       return { ...initialUser, initial: false };
     },
     setLoading(state) {

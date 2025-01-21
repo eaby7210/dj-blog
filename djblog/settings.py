@@ -142,11 +142,11 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'AUTH_HEADER_TYPES': ('Bearer',),
-    'AUTH_COOKIE': 'access_token',
+    # 'AUTH_COOKIE': 'access_token',
 
-    'AUTH_COOKIE_SECURE': True,  # !require https
+    # 'AUTH_COOKIE_SECURE': True,  # !require https
 
-    'AUTH_COOKIE_SAMESITE': 'None',
+    # 'AUTH_COOKIE_SAMESITE': 'None',
 }
 
 REST_AUTH = {
@@ -154,10 +154,11 @@ REST_AUTH = {
     'SESSION_LOGIN': False,
     # !Figure out use of csrf and set be
     'JWT_AUTH_COOKIE_USE_CSRF': False,
-    'JWT_AUTH_COOKIE': 'access_token',
-    'JWT_AUTH_REFRESH_COOKIE': 'refresh_token',
+    # 'JWT_AUTH_COOKIE': 'access_token',
+    # 'JWT_AUTH_REFRESH_COOKIE': 'refresh_token',
     'JWT_AUTH_SAMESITE': 'None',  # ! Require https
     'JWT_AUTH_SECURE': True,  # ! may be the working cookie secure setting
+
     'PASSWORD_CHANGE_SERIALIZER':
         'core.serializers.CustomPasswordChangeSeralizer',
     'USER_DETAILS_SERIALIZER': 'core.serializers.UserSerializer',
@@ -165,8 +166,8 @@ REST_AUTH = {
     'REGISTER_SERIALIZER': 'core.serializers.UserRegisterSerializer',
 }
 
-CSRF_COOKIE_DOMAIN = '.onrender.com'
-SESSION_COOKIE_DOMAIN = '.onrender.com'
+# CSRF_COOKIE_DOMAIN = '.onrender.com'
+# SESSION_COOKIE_DOMAIN = '.onrender.com'
 
 CSRF_COOKIE_NAME = "csrftoken"
 CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"
@@ -200,6 +201,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_COOKIE_SECURE = True  # ! Require https
 CSRF_COOKIE_SAMESITE = 'None'
-SESSION_COOKIE_SECURE = True  # ! Require https
-SESSION_COOKIE_SAMESITE = 'None'
-SECURE_SSL_REDIRECT = True  # ! Require https
+# SESSION_COOKIE_SECURE = True  # ! Require https
+# SESSION_COOKIE_SAMESITE = 'None'
+# SECURE_SSL_REDIRECT = True  # ! Require https
