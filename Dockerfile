@@ -29,7 +29,7 @@ FROM python:3.12-alpine AS backend
 # Set production environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    DJANGO_SETTINGS_MODULE=eduskill.settings \
+    DJANGO_SETTINGS_MODULE=djblog.settings \
     DJANGO_PRODUCTION=1
 
 WORKDIR /app
@@ -51,7 +51,9 @@ COPY --from=builder /usr/local/bin/ /usr/local/bin/
 
 # Copy project files
 COPY --chown=django:django . .
-
+RUN chmod 775 /app
+RUN chown django:django /app
+RUN chown -R django:django /app/db.sqlite3 && chmod 664 /app/db.sqlite3
 # Create media and static directories
 RUN mkdir -p /app/media /app/static && \
     chown -R django:django /app/media /app/static

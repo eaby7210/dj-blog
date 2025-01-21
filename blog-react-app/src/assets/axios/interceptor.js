@@ -11,12 +11,17 @@ const apiClient = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true,
+  // withCredentials: true,
 });
 
 apiClient.interceptors.request.use(
   (config) => {
     //?      configurations:
+    const accessToken = localStorage.getItem("access_token");
+
+    if (accessToken) {
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
+    }
     return config;
   },
   (error) => {
@@ -27,6 +32,7 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => {
     //! response configuration
+
     return response;
   },
   async (error) => {
@@ -40,9 +46,21 @@ apiClient.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        await axios.post(`${baseurl}/auth/token/refresh/`, null, {
-          withCredential: true,
+        const refreshToken = localStorage.getItem("refresh_token");
+        if (!refreshToken) {
+          store.dispatch(userLogout());
+          return apiClient(originalRequest);
+        }
+        const response = await axios.post(`${baseurl}/auth/token/refresh/`, {
+          refresh: refreshToken,
         });
+
+        const { access } = response.data;
+
+        localStorage.setItem("access_token", access);
+
+        apiClient.defaults.headers["Authorization"] = `Bearer ${access}`;
+        originalRequest.headers["Authorization"] = `Bearer ${access}`;
 
         return apiClient(originalRequest);
       } catch {

@@ -11,16 +11,24 @@ SECRET_KEY = 'hhe)7x2)&&+%hg4utol^(47%d^t&oa(72d^gpp@kf9u#gp4u2d'
 DEBUG = True
 
 ALLOWED_HOSTS = ["localhost",
-                 "127.0.0.1", ]
+                 "127.0.0.1", "dj-blog-pied.vercel.app",
+                 "djblog-front.onrender.com"
+                 ]
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    "http://127.0.0.1:5173",
+    "http://127.0.0.1:5173", "https://dj-blog-pied.vercel.app",
+    "https://djblog-front.onrender.com",
 ]
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173',
     # ! Hoppscotch remove this
     'chrome-extension://amknoiejhlmhancpahfcfcfhllgkpbld'
+    "https://dj-blog-pied.vercel.app",
+    "https://djblog-front.onrender.com",
 ]
 CORS_ALLOW_CREDENTIALS = True
 
@@ -55,6 +63,7 @@ MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",
     # dj
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -133,15 +142,23 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'AUTH_HEADER_TYPES': ('Bearer',),
+    # 'AUTH_COOKIE': 'access_token',
+
+    # 'AUTH_COOKIE_SECURE': True,  # !require https
+
+    # 'AUTH_COOKIE_SAMESITE': 'None',
 }
 
 REST_AUTH = {
     'USE_JWT': True,
     'SESSION_LOGIN': False,
-    # !Figure out use of csrf and set below to true
+    # !Figure out use of csrf and set be
     'JWT_AUTH_COOKIE_USE_CSRF': False,
-    'JWT_AUTH_COOKIE': 'access_token',
-    'JWT_AUTH_REFRESH_COOKIE': 'refresh_token',
+    # 'JWT_AUTH_COOKIE': 'access_token',
+    # 'JWT_AUTH_REFRESH_COOKIE': 'refresh_token',
+    'JWT_AUTH_SAMESITE': 'None',  # ! Require https
+    'JWT_AUTH_SECURE': True,  # ! may be the working cookie secure setting
+
     'PASSWORD_CHANGE_SERIALIZER':
         'core.serializers.CustomPasswordChangeSeralizer',
     'USER_DETAILS_SERIALIZER': 'core.serializers.UserSerializer',
@@ -149,12 +166,15 @@ REST_AUTH = {
     'REGISTER_SERIALIZER': 'core.serializers.UserRegisterSerializer',
 }
 
+# CSRF_COOKIE_DOMAIN = '.onrender.com'
+# SESSION_COOKIE_DOMAIN = '.onrender.com'
+
 CSRF_COOKIE_NAME = "csrftoken"
 CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"
-CSRF_COOKIE_NAME = 'csrftoken'
-CSRF_COOKIE_SECURE = False  # Set to True if using HTTPS
+
+
 CSRF_COOKIE_HTTPONLY = False
-ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_EMAIL_REQUIRED = False
 
 
@@ -174,6 +194,13 @@ MEDIA_URL = "/media/"
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CSRF_COOKIE_SECURE = True  # ! Require https
+CSRF_COOKIE_SAMESITE = 'None'
+# SESSION_COOKIE_SECURE = True  # ! Require https
+# SESSION_COOKIE_SAMESITE = 'None'
+# SECURE_SSL_REDIRECT = True  # ! Require https
