@@ -1,9 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
+import Error from "../Pages/Error.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     lazy: () => import("../App.jsx"),
+    errorElement: <Error />,
     children: [
       {
         path: "",
