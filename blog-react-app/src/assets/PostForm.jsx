@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useState } from "react";
 import { Form } from "react-router-dom";
 
 export function PostForm({
@@ -6,6 +7,17 @@ export function PostForm({
   defaultValues = null,
   method = "POST",
 }) {
+  const [selectedimage, setSelectedimage] = useState(null);
+  function hnadleImage(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setSelectedimage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
   return (
     <Form method={method} encType="multipart/form-data">
       <div className="mb-3">
@@ -46,16 +58,18 @@ export function PostForm({
         <label htmlFor="image" className="form-label">
           Image
         </label>
-        {defaultValues?.image && (
-          <div className="mb-3">
-            <img
-              src={defaultValues.image}
-              alt="Blog Image"
-              className="img-thumbnail"
-              width="150"
-            />
-          </div>
-        )}
+        {selectedimage ||
+          (defaultValues?.image && (
+            <div className="mb-3">
+              <img
+                src={selectedimage || defaultValues.image}
+                alt="Blog Image"
+                className="img-thumbnail"
+                width="150"
+                onChange={hnadleImage}
+              />
+            </div>
+          ))}
         <input
           type="file"
           className="form-control"
