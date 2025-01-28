@@ -2,7 +2,6 @@
 import { Form, redirect, useActionData, useLoaderData } from "react-router-dom";
 import apiClient from "../assets/axios/interceptor";
 import { PostForm } from "../assets/PostForm";
-import { useState } from "react";
 
 export async function loader({ params }) {
   const res = await apiClient(`/userposts/${params?.id}/`);
@@ -49,15 +48,6 @@ export async function action(obj) {
 export function Component() {
   const actionData = useActionData();
   const loaderData = useLoaderData();
-  const [showModal, setShowModal] = useState(false);
-
-  const handleDelete = () => {
-    setShowModal(true); // Show the confirmation modal
-  };
-
-  const closeModal = () => {
-    setShowModal(false); // Close the modal without deleting
-  };
 
   return (
     <>
@@ -82,50 +72,54 @@ export function Component() {
         <button
           type="button"
           className="btn btn-outline-danger my-2 w-100"
-          onClick={handleDelete}
+          data-bs-toggle="modal"
+          data-bs-target="#deleteModal"
         >
           Delete
         </button>
 
-        {/* Bootstrap Modal for Delete Confirmation */}
-        {showModal && (
-          <div className="modal fade show" tabIndex="-1" role="dialog">
-            <div className="modal-dialog" role="document">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title">Confirm Deletion</h5>
+        <div
+          id="deleteModal"
+          className="modal fade"
+          tabIndex="-1"
+          role="dialog"
+        >
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Confirm Deletion</h5>
+                <button
+                  type="button"
+                  className="btn-close close"
+                  data-bs-target="#deleteModal"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body">
+                <p>Are you sure you want to delete this blog post?</p>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+                <Form method="DELETE">
                   <button
-                    type="button"
-                    className="close"
-                    data-dismiss="modal"
-                    aria-label="Close"
-                    onClick={closeModal}
+                    type="submit"
+                    className="btn btn-danger"
+                    data-bs-dismiss="modal"
                   >
-                    <span aria-hidden="true">&times;</span>
+                    Delete
                   </button>
-                </div>
-                <div className="modal-body">
-                  <p>Are you sure you want to delete this blog post?</p>
-                </div>
-                <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    data-dismiss="modal"
-                    onClick={closeModal}
-                  >
-                    Cancel
-                  </button>
-                  <Form method="DELETE">
-                    <button type="submit" className="btn btn-danger">
-                      Delete
-                    </button>
-                  </Form>
-                </div>
+                </Form>
               </div>
             </div>
           </div>
-        )}
+        </div>
       </section>
     </>
   );

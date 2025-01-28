@@ -1,15 +1,20 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
-import { Form } from "react-router-dom";
+import { Form, useNavigation } from "react-router-dom";
 
 export function PostForm({
   actionData,
   defaultValues = null,
   method = "POST",
 }) {
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state == "submitting";
+
   const [selectedimage, setSelectedimage] = useState(null);
-  function hnadleImage(event) {
+  function handleImage(event) {
     const file = event.target.files[0];
+    console.log(file);
+    console.log(event.target.files[0]);
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
@@ -18,6 +23,7 @@ export function PostForm({
       reader.readAsDataURL(file);
     }
   }
+  console.log(selectedimage);
   return (
     <Form method={method} encType="multipart/form-data">
       <div className="mb-3">
@@ -58,24 +64,23 @@ export function PostForm({
         <label htmlFor="image" className="form-label">
           Image
         </label>
-        {selectedimage ||
-          (defaultValues?.image && (
-            <div className="mb-3">
-              <img
-                src={selectedimage || defaultValues.image}
-                alt="Blog Image"
-                className="img-thumbnail"
-                width="150"
-                onChange={hnadleImage}
-              />
-            </div>
-          ))}
+        {(selectedimage || defaultValues?.image) && (
+          <div className="mb-3">
+            <img
+              src={selectedimage || defaultValues.image}
+              alt="Blog Image"
+              className="img-thumbnail"
+              width="150"
+            />
+          </div>
+        )}
         <input
           type="file"
           className="form-control"
           id="image"
           name="image"
           accept="image/*"
+          onChange={handleImage}
         />
         {actionData?.image && (
           <span className="text-danger">{actionData?.image[0]}</span>
@@ -90,8 +95,19 @@ export function PostForm({
         <div className="alert alert-success">{actionData.detail}</div>
       )}
 
-      <button type="submit" className="btn btn-primary w-100">
-        Submit
+      <button
+        type="submit"
+        className="btn btn-primary w-100"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? (
+          <div
+            className="spinner-border spinner-border-sm text-light"
+            role="status"
+          ></div>
+        ) : (
+          "Submit"
+        )}
       </button>
     </Form>
   );

@@ -1,11 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigation } from "react-router-dom";
 import Navbar from "./assets/Navbar";
 import { useEffect } from "react";
 import apiClient from "./assets/axios/interceptor";
 import { setUser, userNomad } from "./assets/redux/userSlice";
+import Sekelton from "./Pages/Skeleton";
 
 export function Component() {
+  const navigation = useNavigation();
+  const isLoading = navigation.state === "loading";
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -50,8 +53,7 @@ export function Component() {
           </div>
         </div>
       </nav>
-
-      <Outlet />
+      {isLoading ? <Sekelton /> : <Outlet />}
     </main>
   );
 }
