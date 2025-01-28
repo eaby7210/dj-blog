@@ -42,6 +42,14 @@ function Navbar() {
               className="nav-link px-lg-3 py-3 py-lg-4"
               onClick={handleLogout}
             >
+              ( {user.username} )
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link px-lg-3 py-3 py-lg-4"
+              onClick={handleLogout}
+            >
               Logout
             </Link>
           </li>
